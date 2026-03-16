@@ -46,7 +46,7 @@ jobs:
           RELAMPO_NODE: ${{ matrix.node }}
         run: |
           echo "🏁 Starting node $RELAMPO_NODE of 2"
-          SCENARIO_PATH='scenarios/Relampo1.yaml'
+          SCENARIO_PATH='scenarios/Relampo2.yaml'
           SCENARIO_DIR="$(dirname "$SCENARIO_PATH")"
           SCENARIO_FILE="$(basename "$SCENARIO_PATH")"
           VUS_FLAG=""

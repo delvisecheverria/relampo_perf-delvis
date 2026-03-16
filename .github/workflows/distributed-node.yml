@@ -58,7 +58,7 @@ jobs:
           (
             cd "$SCENARIO_DIR"
             OUTPUT_FILE="$(mktemp)"
-            echo $'\033[38;5;214m⠸ Esto no es magia, relampo solo está trabajando, pronto te mostraré los resultados.\033[0m'
+            echo $'\033[38;5;214m⠸ Esto no es magia, relampo solo esta trabajando, pronto te mostrare los resultados.\033[0m'
             RELAMPO_P95_ALERT=0
             relampo_extract_stats() {
               local file="$1"
@@ -384,14 +384,14 @@ jobs:
               EXIST_GO_IOWAIT_DELTA=$((EXIST_GO_IOWAIT_END - EXIST_GO_IOWAIT_START))
             fi
 
-	            CLEAN_OUTPUT_FILE="$(mktemp)"
-	            awk 'BEGIN{esc=sprintf("%c",27)} {line=$0; gsub(esc "\\[[0-9;]*[A-Za-z]", "", line); print line}' "$OUTPUT_FILE" > "$CLEAN_OUTPUT_FILE"
-	            OUT_MEM="$(grep -Eo 'MEM Peak:[[:space:]]*[0-9]+' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+' || true)"
-	            OUT_CPU="$(grep -Eo 'CPU Peak:[[:space:]]*[0-9]+([.][0-9]+)?' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+([.][0-9]+)?' || true)"
-	            OUT_GO="$(grep -Eo 'Go:[[:space:]]*[0-9]+' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+' || true)"
-	            [ -z "$OUT_MEM" ] && OUT_MEM=0
-	            [ -z "$OUT_CPU" ] && OUT_CPU=0
-	            [ -z "$OUT_GO" ] && OUT_GO=0
+            CLEAN_OUTPUT_FILE="$(mktemp)"
+            awk 'BEGIN{esc=sprintf("%c",27)} {line=$0; gsub(esc "\\[[0-9;]*[A-Za-z]", "", line); print line}' "$OUTPUT_FILE" > "$CLEAN_OUTPUT_FILE"
+            OUT_MEM="$(grep -Eo 'MEM Peak:[[:space:]]*[0-9]+' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+' || true)"
+            OUT_CPU="$(grep -Eo 'CPU Peak:[[:space:]]*[0-9]+([.][0-9]+)?' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+([.][0-9]+)?' || true)"
+            OUT_GO="$(grep -Eo 'Go:[[:space:]]*[0-9]+' "$CLEAN_OUTPUT_FILE" | tail -n1 | grep -Eo '[0-9]+' || true)"
+            [ -z "$OUT_MEM" ] && OUT_MEM=0
+            [ -z "$OUT_CPU" ] && OUT_CPU=0
+            [ -z "$OUT_GO" ] && OUT_GO=0
 
             FINAL_MEM="$EXIST_MEM"
             if [ "$OUT_MEM" -gt "$FINAL_MEM" ]; then
@@ -437,45 +437,45 @@ jobs:
               echo "   Based on classic user response-time guidance (Jakob Nielsen: attention degrades around 10s)"
               echo "   and practical performance engineering ranges commonly associated with Scott Barber."
             fi
-	            FINAL_TOTAL_COUNT=0
-	            FINAL_TOTAL_ERR=0
-	            FINAL_TOTAL_P95=0
-	            FINAL_EVENTS_FILE="$(ls -1t results/node-*.events.*.jsonl 2>/dev/null | head -n1)"
+            FINAL_TOTAL_COUNT=0
+            FINAL_TOTAL_ERR=0
+            FINAL_TOTAL_P95=0
+            FINAL_EVENTS_FILE="$(ls -1t results/node-*.events.*.jsonl 2>/dev/null | head -n1)"
             if [ -n "$FINAL_EVENTS_FILE" ] && [ -f "$FINAL_EVENTS_FILE" ]; then
               FINAL_TOTAL_STATS="$(relampo_extract_stats "$FINAL_EVENTS_FILE" 1)"
               IFS='|' read -r FINAL_TOTAL_COUNT _ _ _ FINAL_TOTAL_ERR FINAL_TOTAL_P95 _ _ <<< "$FINAL_TOTAL_STATS"
             fi
-	            [ -z "$FINAL_TOTAL_COUNT" ] && FINAL_TOTAL_COUNT=0
-	            [ -z "$FINAL_TOTAL_ERR" ] && FINAL_TOTAL_ERR=0
-	            [ -z "$FINAL_TOTAL_P95" ] && FINAL_TOTAL_P95=0
-	            if [ "$WORKER_STATUS" -ne 0 ]; then
-	              FAILURE_LINE="$(grep -E 'failed:|data_source:|no such file or directory|error:' "$CLEAN_OUTPUT_FILE" | tail -n1 || true)"
-	              if [ -z "$FAILURE_LINE" ]; then
-	                FAILURE_LINE="$(tail -n1 "$CLEAN_OUTPUT_FILE" 2>/dev/null || true)"
-	              fi
-	              if [ -n "$FAILURE_LINE" ]; then
-	                printf '%s\n' "$FAILURE_LINE" > "results/node-$RELAMPO_NODE.failure.txt"
-	              fi
-	            fi
-	            rm -f "$CLEAN_OUTPUT_FILE"
-	            relampo_print_github_diagnosis "$FINAL_TOTAL_COUNT" "$FINAL_TOTAL_ERR" "$FINAL_TOTAL_P95" "$FINAL_MEM" "$FINAL_MEM_PCT" "$FINAL_CPU" "$EXIST_GO_DELTA" "$FINAL_GO_IOWAIT" "$FINAL_GO_IOWAIT_SAMPLES"
-	            cat "$OUTPUT_FILE"
-	            rm -f "$OUTPUT_FILE"
-	            exit "$WORKER_STATUS"
-	          ) || WORKER_STATUS=$?
-	          mkdir -p results
-	          printf 'worker_status=%s\n' "$WORKER_STATUS" > "results/node-$RELAMPO_NODE.status.txt"
-	          if [ -f "$SCENARIO_DIR/results/node-$RELAMPO_NODE.failure.txt" ]; then
-	            FAILURE_REASON="$(head -n1 "$SCENARIO_DIR/results/node-$RELAMPO_NODE.failure.txt" | tr -d '\r' || true)"
-	            if [ -n "$FAILURE_REASON" ]; then
-	              printf 'worker_error=%s\n' "$FAILURE_REASON" >> "results/node-$RELAMPO_NODE.status.txt"
-	            fi
-	          fi
-	          if [ -d "$SCENARIO_DIR/results" ]; then
-	            cp -R "$SCENARIO_DIR/results"/. results/
-	          else
-	            echo "results directory not found in scenario path: $SCENARIO_DIR/results" >> "results/node-$RELAMPO_NODE.status.txt"
-	          fi
+            [ -z "$FINAL_TOTAL_COUNT" ] && FINAL_TOTAL_COUNT=0
+            [ -z "$FINAL_TOTAL_ERR" ] && FINAL_TOTAL_ERR=0
+            [ -z "$FINAL_TOTAL_P95" ] && FINAL_TOTAL_P95=0
+            if [ "$WORKER_STATUS" -ne 0 ]; then
+              FAILURE_LINE="$(grep -E 'failed:|data_source:|no such file or directory|error:' "$CLEAN_OUTPUT_FILE" | tail -n1 || true)"
+              if [ -z "$FAILURE_LINE" ]; then
+                FAILURE_LINE="$(tail -n1 "$CLEAN_OUTPUT_FILE" 2>/dev/null || true)"
+              fi
+              if [ -n "$FAILURE_LINE" ]; then
+                printf '%s\n' "$FAILURE_LINE" > "results/node-$RELAMPO_NODE.failure.txt"
+              fi
+            fi
+            rm -f "$CLEAN_OUTPUT_FILE"
+            relampo_print_github_diagnosis "$FINAL_TOTAL_COUNT" "$FINAL_TOTAL_ERR" "$FINAL_TOTAL_P95" "$FINAL_MEM" "$FINAL_MEM_PCT" "$FINAL_CPU" "$EXIST_GO_DELTA" "$FINAL_GO_IOWAIT" "$FINAL_GO_IOWAIT_SAMPLES"
+            cat "$OUTPUT_FILE"
+            rm -f "$OUTPUT_FILE"
+            exit "$WORKER_STATUS"
+          ) || WORKER_STATUS=$?
+          mkdir -p results
+          printf 'worker_status=%s\n' "$WORKER_STATUS" > "results/node-$RELAMPO_NODE.status.txt"
+          if [ -f "$SCENARIO_DIR/results/node-$RELAMPO_NODE.failure.txt" ]; then
+            FAILURE_REASON="$(head -n1 "$SCENARIO_DIR/results/node-$RELAMPO_NODE.failure.txt" | tr -d '\r' || true)"
+            if [ -n "$FAILURE_REASON" ]; then
+              printf 'worker_error=%s\n' "$FAILURE_REASON" >> "results/node-$RELAMPO_NODE.status.txt"
+            fi
+          fi
+          if [ -d "$SCENARIO_DIR/results" ]; then
+            cp -R "$SCENARIO_DIR/results"/. results/
+          else
+            echo "results directory not found in scenario path: $SCENARIO_DIR/results" >> "results/node-$RELAMPO_NODE.status.txt"
+          fi
           exit "$WORKER_STATUS"
 
       - name: Upload logs/artifacts

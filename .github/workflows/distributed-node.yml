@@ -58,7 +58,7 @@ jobs:
           (
             cd "$SCENARIO_DIR"
             OUTPUT_FILE="$(mktemp)"
-            echo $'\033[38;5;214m⠸ Esto no es magia, relampo solo esta trabajando, pronto te mostrare los resultados.\033[0m'
+            echo $'\033[38;5;214m⠸ Esto no es magia, relampo solo está trabajando, pronto te mostraré los resultados.\033[0m'
             RELAMPO_P95_ALERT=0
             relampo_extract_stats() {
               local file="$1"

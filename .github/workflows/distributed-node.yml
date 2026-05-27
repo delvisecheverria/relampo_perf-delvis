@@ -18,7 +18,7 @@ jobs:
       - name: Setup latest Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable
+          go-version: '1.26.1'
           check-latest: true
 
       - name: Install Relampo CLI
@@ -46,12 +46,12 @@ jobs:
           RELAMPO_NODE: ${{ matrix.node }}
         run: |
           echo "🏁 Starting node $RELAMPO_NODE of 4"
-          SCENARIO_PATH='scenarios/Relampo2.yaml'
+          SCENARIO_PATH='scenarios/testingyesmay2026OK.yaml'
           SCENARIO_DIR="$(dirname "$SCENARIO_PATH")"
           SCENARIO_FILE="$(basename "$SCENARIO_PATH")"
           VUS_FLAG=""
-          if [ -n "100" ]; then
-            VUS_FLAG="--vus 100"
+          if [ -n "500" ]; then
+            VUS_FLAG="--vus 500"
           fi
           set -o pipefail
           WORKER_STATUS=0

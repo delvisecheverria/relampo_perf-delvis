@@ -18,7 +18,7 @@ scenarios:
         mode: auto
       load:
         __relampo_duration_override_iteration_total: 1
-        duration: 5m
+        duration: 2m
         ramp_up: 2m
         type: constant
         users: "100"
